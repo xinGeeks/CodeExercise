@@ -12,8 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ThreeThreadPrint_Synchronized {
 
-    //static AtomicInteger count = new AtomicInteger(1);
-    static int count = 1;
+    private static int count = 1;
 
     static class ThreadPrinter implements Runnable {
 
