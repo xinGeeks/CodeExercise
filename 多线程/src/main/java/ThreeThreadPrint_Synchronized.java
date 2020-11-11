@@ -12,7 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ThreeThreadPrint_Synchronized {
 
-    static AtomicInteger count = new AtomicInteger(1);
+    //static AtomicInteger count = new AtomicInteger(1);
+    static int count = 1;
 
     static class ThreadPrinter implements Runnable {
 
@@ -28,16 +29,16 @@ public class ThreeThreadPrint_Synchronized {
 
         @Override
         public void run() {
-            while (count.getAcquire() < 101) {
+            while (count < 101) {
                 synchronized (prev) {        // 获取前一个的锁
                     synchronized (self) {    // 获取自己的锁
-                        System.out.println(name + ":" + count.getAcquire());
-                        count.incrementAndGet();
+                        System.out.println(name + ":" + count);
+                        count++;
                         self.notifyAll();   // 唤醒其他线程竞争self锁
                     }
 
                     try {
-                        if (count.getAcquire() == 101) {  // count == 100 最后一次打印操作，通过notifyAll操作释放对象锁
+                        if (count == 101) {  // count == 100 最后一次打印操作，通过notifyAll操作释放对象锁，从而死锁终止打印
                             prev.notifyAll();
                         } else {
                             prev.wait();  // 否则释放prev锁
