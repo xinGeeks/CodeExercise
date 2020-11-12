@@ -1,4 +1,3 @@
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -6,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author SemperFi
  * @Title: null.java
  * @Package CodeExercise
- * @Description: three thread print 1-100
+ * @Description: three thread print 1-100 可重入锁
  * @date 2020-11-11 23:01
  */
 public class ThreeThreadPrint_Lock {
@@ -14,61 +13,36 @@ public class ThreeThreadPrint_Lock {
     private static int sequence = 1;
     private static int count = 1;
 
-    public static void main(String[] args) {
-        new Thread(new firstThread(), "线程1").start();
-        new Thread(new secondThread(), "线程2").start();
-        new Thread(new threeThread(), "线程3").start();
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(new PrintThread(1, 2), "线程1").start();
+        Thread.sleep(100);
+        new Thread(new PrintThread(2, 3), "线程2").start();
+        Thread.sleep(100);
+        new Thread(new PrintThread(3, 1), "线程3").start();
+        Thread.sleep(100);
     }
 
-    static class firstThread implements Runnable {
+    static class PrintThread implements Runnable {
+        private int self;
+        private int next;
 
-        @Override
-        public void run() {
-            while (count < 99) {
-                try {
-                    lock.lock();
-                    while (sequence == 1) {
-                        System.out.println(Thread.currentThread().getName() + ":" + count);
-                        count++;
-                        sequence = 2;
-                    }
-                } finally {
-                    lock.unlock();
-                }
-            }
+        public PrintThread(int self, int next) {
+            this.self = self;
+            this.next = next;
         }
-    }
-
-    static class secondThread implements Runnable {
 
         @Override
         public void run() {
-            while (count < 99) {
+            while (count <= 100){
                 try {
                     lock.lock();
-                    while (sequence == 2) {
-                        System.out.println(Thread.currentThread().getName() + ":" + count);
+                    while (sequence == self) {
+                        while (count <= 100) {
+                            System.out.println(Thread.currentThread().getName() + ":" + count);
+                            break;
+                        }
                         count++;
-                        sequence = 3;
-                    }
-                } finally {
-                    lock.unlock();
-                }
-            }
-        }
-    }
-
-    static class threeThread implements Runnable {
-
-        @Override
-        public void run() {
-            while (count < 99) {
-                try {
-                    lock.lock();
-                    while (sequence == 3) {
-                        System.out.println(Thread.currentThread().getName() + ":" + count);
-                        count++;
-                        sequence = 1;
+                        sequence = next;
                     }
                 } finally {
                     lock.unlock();
@@ -77,3 +51,4 @@ public class ThreeThreadPrint_Lock {
         }
     }
 }
+
