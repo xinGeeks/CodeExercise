@@ -14,6 +14,7 @@ public class ThreeThreadPrint_Lock {
     private static int count = 1;
 
     public static void main(String[] args) throws InterruptedException {
+        // 通过传入的self, next控制线程执行顺序
         new Thread(new PrintThread(1, 2), "线程1").start();
         Thread.sleep(100);
         new Thread(new PrintThread(2, 3), "线程2").start();
@@ -33,16 +34,16 @@ public class ThreeThreadPrint_Lock {
 
         @Override
         public void run() {
-            while (count <= 100){
+            while (count <= 100){ // 当count > 100时退出
                 try {
                     lock.lock();
-                    while (sequence == self) {
+                    while (sequence == self) { // 控制线程执行顺序
                         while (count <= 100) {
                             System.out.println(Thread.currentThread().getName() + ":" + count);
                             break;
                         }
                         count++;
-                        sequence = next;
+                        sequence = next; // 控制下个线程由谁执行
                     }
                 } finally {
                     lock.unlock();
