@@ -40,8 +40,8 @@ public class ReverseInteger {
         public int reverse(int x) {
             long n = 0;
             while (x != 0) {
-                n = n * 10 + x % 10;
-                x = x / 10;
+                n = n * 10 + x % 10; // 对10取余，第一次为个位，第二次时 因为每次乘10都会将这个数逐次变为高位
+                x = x / 10; // 对原来的数 降位
             }
             return (int) n == n ? (int) n : 0;
         }
