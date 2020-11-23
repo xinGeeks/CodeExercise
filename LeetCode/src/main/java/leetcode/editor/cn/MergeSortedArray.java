@@ -48,6 +48,17 @@ public class MergeSortedArray {
             }
             Arrays.sort(nums1);
         }
+
+        public void merge1(int[] nums1, int m, int[] nums2, int n) {
+            // 三指针 指针一p1、nums1有效元素尾部；指针二p2、nums2尾部；指针三p3、最终数组尾部
+            int p1 = m - 1, p2 = n - 1, p = m + n - 1;
+            while ((p1 >= 0) && (p2 >= 0)) {
+                // 谁大谁放后面，并下标减1，后继续和下标没减1的比较依次类推
+                nums1[p--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--];
+            }
+            // 将nums2的0索引位置开始到长度为p2+1的部分拷贝到nums1的0索引位置依次往后p2+1的长度
+            System.arraycopy(nums2, 0, nums1, 0, p2 + 1);
+        }
     }
 //leetcode submit region end(Prohibit modification and deletion)
 
