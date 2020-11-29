@@ -62,6 +62,19 @@ class Solution {
         }
         throw new IllegalArgumentException("No two sum solution");
     }
+
+    public int[] twoSum1(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            int tmp = target - nums[i];
+            for (int j = i + 1; j < nums.length; j++) {
+                if (tmp == nums[j]) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        throw new IllegalArgumentException("No two sum solution");
+    }
+
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
